@@ -3,6 +3,16 @@
 Instructions: <https://ucsb-cs156.github.io/s24/lab/team02.html>
 
 TODO: change heading above to your repo name, e.g. `# team02-s24-6pm-4`
+```
+|   Name        | GitHub Id    |  Dataset Table                 |
+|---------------|--------------|--------------------------------|
+| Emre Cikisir  |emrecikisir   | UCSB Organizations             |
+| Ridhit Garg   | tihdiR       | Articles                       | 
+| Winbert Zhang | WinbertZhang | Menu Item Reviews              |
+| Andrew Chiang | andrew344c   | Help Requests                  | 
+| Jaren Lowe    | JLowe32      | Recommendation Requests        |
+| Anderson Lee  | andersonlee3 | UCSB Dining Commons Menu Items |
+```
 
 TODO: Add a link to the deployed Dokku app for your team here, e.g.
 
