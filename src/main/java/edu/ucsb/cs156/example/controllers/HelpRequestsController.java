@@ -62,7 +62,7 @@ public class HelpRequestsController extends ApiController {
         log.info("requestTime={}", requestTime);
 
         HelpRequest helpRequest = new HelpRequest();
-        helpRequest.setExplanation(requesterEmail);
+        helpRequest.setRequesterEmail(requesterEmail);
         helpRequest.setTeamId(teamId);
         helpRequest.setTableOrBreakoutRoom(tableOrBreakoutRoom);
         helpRequest.setRequestTime(requestTime);
