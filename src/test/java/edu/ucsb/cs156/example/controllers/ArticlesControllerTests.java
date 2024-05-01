@@ -99,7 +99,7 @@ public class ArticlesControllerTests extends ControllerTestCase {
                 assertEquals(expectedJson, responseString);
         }
 
-        // Tests for POST /api/ucsbdates/post...
+        // Tests for POST /api/articles/post...
 
         @Test
         public void logged_out_users_cannot_post() throws Exception {
@@ -144,63 +144,65 @@ public class ArticlesControllerTests extends ControllerTestCase {
                 assertEquals(expectedJson, responseString);
         }
 
-//         // Tests for GET /api/ucsbdates?id=...
+        // Tests for GET /api/articles?id=...
 
-//         @Test
-//         public void logged_out_users_cannot_get_by_id() throws Exception {
-//                 mockMvc.perform(get("/api/ucsbdates?id=7"))
-//                                 .andExpect(status().is(403)); // logged out users can't get by id
-//         }
+        @Test
+        public void logged_out_users_cannot_get_by_id() throws Exception {
+                mockMvc.perform(get("/api/articles?id=7"))
+                                .andExpect(status().is(403)); // logged out users can't get by id
+        }
 
-//         @WithMockUser(roles = { "USER" })
-//         @Test
-//         public void test_that_logged_in_user_can_get_by_id_when_the_id_exists() throws Exception {
+        @WithMockUser(roles = { "USER" })
+        @Test
+        public void test_that_logged_in_user_can_get_by_id_when_the_id_exists() throws Exception {
 
-//                 // arrange
-//                 LocalDateTime ldt = LocalDateTime.parse("2022-01-03T00:00:00");
+                // arrange
+                LocalDateTime ldt = LocalDateTime.parse("2022-01-03T00:00:00");
 
-//                 UCSBDate ucsbDate = UCSBDate.builder()
-//                                 .name("firstDayOfClasses")
-//                                 .quarterYYYYQ("20222")
-//                                 .localDateTime(ldt)
-//                                 .build();
+                Articles article1 = Articles.builder()
+                                .title("BigNewsAlert")
+                                .url("www.news.com")
+                                .explanation("superbignews")
+                                .email("newsman@gmail.com")
+                                .dateAdded(ldt)
+                                .build();
 
-//                 when(ucsbDateRepository.findById(eq(7L))).thenReturn(Optional.of(ucsbDate));
+                when(articlesRepository.findById(eq(7L))).thenReturn(Optional.of(article1));
 
-//                 // act
-//                 MvcResult response = mockMvc.perform(get("/api/ucsbdates?id=7"))
-//                                 .andExpect(status().isOk()).andReturn();
+                // act
+                MvcResult response = mockMvc.perform(get("/api/articles?id=7"))
+                                .andExpect(status().isOk()).andReturn();
 
-//                 // assert
+                // assert
 
-//                 verify(ucsbDateRepository, times(1)).findById(eq(7L));
-//                 String expectedJson = mapper.writeValueAsString(ucsbDate);
-//                 String responseString = response.getResponse().getContentAsString();
-//                 assertEquals(expectedJson, responseString);
-//         }
+                verify(articlesRepository, times(1)).findById(eq(7L));
+                String expectedJson = mapper.writeValueAsString(article1);
+                String responseString = response.getResponse().getContentAsString();
+                assertEquals(expectedJson, responseString);
+        }
 
-//         @WithMockUser(roles = { "USER" })
-//         @Test
-//         public void test_that_logged_in_user_can_get_by_id_when_the_id_does_not_exist() throws Exception {
+        @WithMockUser(roles = { "USER" })
+        @Test
+        public void test_that_logged_in_user_can_get_by_id_when_the_id_does_not_exist() throws Exception {
 
-//                 // arrange
+                // arrange
 
-//                 when(ucsbDateRepository.findById(eq(7L))).thenReturn(Optional.empty());
+                when(articlesRepository.findById(eq(7L))).thenReturn(Optional.empty());
 
-//                 // act
-//                 MvcResult response = mockMvc.perform(get("/api/ucsbdates?id=7"))
-//                                 .andExpect(status().isNotFound()).andReturn();
+                // act
+                MvcResult response = mockMvc.perform(get("/api/articles?id=7"))
+                                .andExpect(status().isNotFound()).andReturn();
 
-//                 // assert
+                // assert
 
-//                 verify(ucsbDateRepository, times(1)).findById(eq(7L));
-//                 Map<String, Object> json = responseToJson(response);
-//                 assertEquals("EntityNotFoundException", json.get("type"));
-//                 assertEquals("UCSBDate with id 7 not found", json.get("message"));
-//         }
+                verify(articlesRepository, times(1)).findById(eq(7L));
+                Map<String, Object> json = responseToJson(response);
+                assertEquals("EntityNotFoundException", json.get("type"));
+                assertEquals("Articles with id 7 not found", json.get("message"));
+        }
 
 
-        // Tests for DELETE /api/ucsbdates?id=... 
+        // Tests for DELETE /api/articles?id=... 
 
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
@@ -253,7 +255,7 @@ public class ArticlesControllerTests extends ControllerTestCase {
                 assertEquals("Articles with id 15 not found", json.get("message"));
         }
 
-        // Tests for PUT /api/ucsbdates?id=... 
+        // Tests for PUT /api/articles?id=... 
 
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
