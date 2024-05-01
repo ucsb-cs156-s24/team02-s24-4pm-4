@@ -149,5 +149,79 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
         assertEquals(expectedJson, responseString);
     }
 
+    //Tests for GET /api/recommendationrequests/get
+    @Test
+    public void logged_out_users_cannot_get_by_id() throws Exception {
+        mockMvc.perform(get("/api/recommendationrequests/get?id=1"))
+                .andExpect(status().is(403));
+    }
+
+    @WithMockUser(roles = { "USER" })
+    @Test
+    public void logged_in_regular_users_cannot_get_by_id() throws Exception {
+        mockMvc.perform(get("/api/recommendationrequests/get?id=123"))
+                .andExpect(status().is(404));
+    }
+
+    @WithMockUser(roles = { "USER" })
+    @Test
+    public void users_can_get_by_id() throws Exception {
+
+        LocalDateTime expectedRequested = LocalDateTime.parse("2024-04-26T08:08:00");
+        LocalDateTime expectedNeeded = LocalDateTime.parse("2024-04-27T08:08:00");
+
+        RecommendationRequest expected = new RecommendationRequest();
+        expected.setId(3L);
+        expected.setRequesterEmail("requesterEmail");
+        expected.setProfessorEmail("professorEmail");
+        expected.setExplanation("explanation");
+        expected.setDateRequested(expectedNeeded);
+        expected.setDateNeeded(expectedRequested);
+        expected.setDone(true);
+
+        when(recommendationRequestRepository.findById(3L)).thenReturn(Optional.of(expected));
+
+        // act
+        MvcResult response = mockMvc.perform(get("/api/recommendationrequests/get?id=3")).andExpect(status().is(200)).andReturn();
+
+        // assert
+        verify(recommendationRequestRepository, times(1)).findById(3L);
+        String expectedJson = mapper.writeValueAsString(expected);
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals(expectedJson, responseString);
+
+    }
+
+    @WithMockUser(roles = { "USER" })
+    @Test
+    public void users_can_get_by_id_recommendation_request() throws Exception {
+        // arrange
+
+        LocalDateTime expectedRequested = LocalDateTime.parse("2024-04-26T08:08:00");
+        LocalDateTime expectedNeeded = LocalDateTime.parse("2024-04-27T08:08:00");
+
+        RecommendationRequest expected = new RecommendationRequest();
+        expected.setId(2L);
+        expected.setRequesterEmail("requesterEmail");
+        expected.setProfessorEmail("professorEmail");
+        expected.setExplanation("explanation");
+        expected.setDateRequested(expectedNeeded);
+        expected.setDateNeeded(expectedRequested);
+        expected.setDone(true);
+
+        when(recommendationRequestRepository.findById(2L)).thenReturn(Optional.of(expected));
+
+        // act
+        MvcResult response = mockMvc.perform(get("/api/recommendationrequests/get?id=2")).andExpect(status().is(200)).andReturn();
+
+        // assert
+        verify(recommendationRequestRepository, times(1)).findById(2L);
+        String expectedJson = mapper.writeValueAsString(expected);
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals(expectedJson, responseString);
+    }
+
+    
+
 
 }
