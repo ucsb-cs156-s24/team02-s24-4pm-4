@@ -99,7 +99,7 @@ public class ArticlesControllerTests extends ControllerTestCase {
                 assertEquals(expectedJson, responseString);
         }
 
-        // Tests for POST /api/ucsbdates/post...
+        // Tests for POST /api/articles/post...
 
         @Test
         public void logged_out_users_cannot_post() throws Exception {
@@ -144,7 +144,7 @@ public class ArticlesControllerTests extends ControllerTestCase {
                 assertEquals(expectedJson, responseString);
         }
 
-        // Tests for GET /api/ucsbdates?id=...
+        // Tests for GET /api/articles?id=...
 
         @Test
         public void logged_out_users_cannot_get_by_id() throws Exception {
@@ -202,7 +202,7 @@ public class ArticlesControllerTests extends ControllerTestCase {
         }
 
 
-        // Tests for DELETE /api/ucsbdates?id=... 
+        // Tests for DELETE /api/articles?id=... 
 
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
@@ -255,7 +255,7 @@ public class ArticlesControllerTests extends ControllerTestCase {
                 assertEquals("Articles with id 15 not found", json.get("message"));
         }
 
-        // Tests for PUT /api/ucsbdates?id=... 
+        // Tests for PUT /api/articles?id=... 
 
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
