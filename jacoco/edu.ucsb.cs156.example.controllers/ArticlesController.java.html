@@ -86,5 +86,26 @@ import java.time.LocalDateTime;
 <span class="fc" id="L86">        articlesRepository.delete(article);</span>
 <span class="fc" id="L87">        return genericMessage(&quot;Article with id %s deleted&quot;.formatted(id));</span>
     }
+
+    @Operation(summary= &quot;Update a single Article&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @PutMapping(&quot;&quot;)
+    public Articles updateArticles(
+            @Parameter(name=&quot;id&quot;) @RequestParam Long id,
+            @RequestBody @Valid Articles incoming) {
+
+<span class="fc" id="L97">        Articles articles = articlesRepository.findById(id)</span>
+<span class="fc" id="L98">                .orElseThrow(() -&gt; new EntityNotFoundException(Articles.class, id));</span>
+
+<span class="fc" id="L100">            articles.setTitle(incoming.getTitle());</span>
+<span class="fc" id="L101">            articles.setUrl(incoming.getUrl());</span>
+<span class="fc" id="L102">            articles.setExplanation(incoming.getExplanation());</span>
+<span class="fc" id="L103">            articles.setEmail(incoming.getEmail());</span>
+<span class="fc" id="L104">            articles.setDateAdded(incoming.getDateAdded());</span>
+
+<span class="fc" id="L106">        articlesRepository.save(articles);</span>
+
+<span class="fc" id="L108">        return articles;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
