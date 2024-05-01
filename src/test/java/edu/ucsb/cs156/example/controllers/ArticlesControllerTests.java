@@ -253,79 +253,85 @@ public class ArticlesControllerTests extends ControllerTestCase {
                 assertEquals("Articles with id 15 not found", json.get("message"));
         }
 
-//         // Tests for PUT /api/ucsbdates?id=... 
+        // Tests for PUT /api/ucsbdates?id=... 
 
-//         @WithMockUser(roles = { "ADMIN", "USER" })
-//         @Test
-//         public void admin_can_edit_an_existing_ucsbdate() throws Exception {
-//                 // arrange
+        @WithMockUser(roles = { "ADMIN", "USER" })
+        @Test
+        public void admin_can_edit_an_existing_article() throws Exception {
+                // arrange
 
-//                 LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
-//                 LocalDateTime ldt2 = LocalDateTime.parse("2023-01-03T00:00:00");
+                LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+                LocalDateTime ldt2 = LocalDateTime.parse("2023-01-03T00:00:00");
 
-//                 UCSBDate ucsbDateOrig = UCSBDate.builder()
-//                                 .name("firstDayOfClasses")
-//                                 .quarterYYYYQ("20222")
-//                                 .localDateTime(ldt1)
-//                                 .build();
+                Articles article1 = Articles.builder()
+                                .title("BigNewsAlert")
+                                .url("www.news.com")
+                                .explanation("superbignews")
+                                .email("newsman@gmail.com")
+                                .dateAdded(ldt1)
+                                .build();
 
-//                 UCSBDate ucsbDateEdited = UCSBDate.builder()
-//                                 .name("firstDayOfFestivus")
-//                                 .quarterYYYYQ("20232")
-//                                 .localDateTime(ldt2)
-//                                 .build();
+                Articles article1Edited = Articles.builder()
+                                .title("BigNewsAlert!!!")
+                                .url("www.news2.com")
+                                .explanation("superbignews!!!")
+                                .email("newsman2@gmail.com")
+                                .dateAdded(ldt2)
+                                .build();
 
-//                 String requestBody = mapper.writeValueAsString(ucsbDateEdited);
+                String requestBody = mapper.writeValueAsString(article1Edited);
 
-//                 when(ucsbDateRepository.findById(eq(67L))).thenReturn(Optional.of(ucsbDateOrig));
+                when(articlesRepository.findById(eq(67L))).thenReturn(Optional.of(article1));
 
-//                 // act
-//                 MvcResult response = mockMvc.perform(
-//                                 put("/api/ucsbdates?id=67")
-//                                                 .contentType(MediaType.APPLICATION_JSON)
-//                                                 .characterEncoding("utf-8")
-//                                                 .content(requestBody)
-//                                                 .with(csrf()))
-//                                 .andExpect(status().isOk()).andReturn();
+                // act
+                MvcResult response = mockMvc.perform(
+                                put("/api/articles?id=67")
+                                                .contentType(MediaType.APPLICATION_JSON)
+                                                .characterEncoding("utf-8")
+                                                .content(requestBody)
+                                                .with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
 
-//                 // assert
-//                 verify(ucsbDateRepository, times(1)).findById(67L);
-//                 verify(ucsbDateRepository, times(1)).save(ucsbDateEdited); // should be saved with correct user
-//                 String responseString = response.getResponse().getContentAsString();
-//                 assertEquals(requestBody, responseString);
-//         }
+                // assert
+                verify(articlesRepository, times(1)).findById(67L);
+                verify(articlesRepository, times(1)).save(article1Edited); // should be saved with correct user
+                String responseString = response.getResponse().getContentAsString();
+                assertEquals(requestBody, responseString);
+        }
 
         
-//         @WithMockUser(roles = { "ADMIN", "USER" })
-//         @Test
-//         public void admin_cannot_edit_ucsbdate_that_does_not_exist() throws Exception {
-//                 // arrange
+        @WithMockUser(roles = { "ADMIN", "USER" })
+        @Test
+        public void admin_cannot_edit_article_that_does_not_exist() throws Exception {
+                // arrange
 
-//                 LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+                LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
 
-//                 UCSBDate ucsbEditedDate = UCSBDate.builder()
-//                                 .name("firstDayOfClasses")
-//                                 .quarterYYYYQ("20222")
-//                                 .localDateTime(ldt1)
-//                                 .build();
+                Articles article1Edited = Articles.builder()
+                                .title("BigNewsAlert!!!")
+                                .url("www.news2.com")
+                                .explanation("superbignews!!!")
+                                .email("newsman2@gmail.com")
+                                .dateAdded(ldt1)
+                                .build();
 
-//                 String requestBody = mapper.writeValueAsString(ucsbEditedDate);
+                String requestBody = mapper.writeValueAsString(article1Edited);
 
-//                 when(ucsbDateRepository.findById(eq(67L))).thenReturn(Optional.empty());
+                when(articlesRepository.findById(eq(67L))).thenReturn(Optional.empty());
 
-//                 // act
-//                 MvcResult response = mockMvc.perform(
-//                                 put("/api/ucsbdates?id=67")
-//                                                 .contentType(MediaType.APPLICATION_JSON)
-//                                                 .characterEncoding("utf-8")
-//                                                 .content(requestBody)
-//                                                 .with(csrf()))
-//                                 .andExpect(status().isNotFound()).andReturn();
+                // act
+                MvcResult response = mockMvc.perform(
+                                put("/api/articles?id=67")
+                                                .contentType(MediaType.APPLICATION_JSON)
+                                                .characterEncoding("utf-8")
+                                                .content(requestBody)
+                                                .with(csrf()))
+                                .andExpect(status().isNotFound()).andReturn();
 
-//                 // assert
-//                 verify(ucsbDateRepository, times(1)).findById(67L);
-//                 Map<String, Object> json = responseToJson(response);
-//                 assertEquals("UCSBDate with id 67 not found", json.get("message"));
+                // assert
+                verify(articlesRepository, times(1)).findById(67L);
+                Map<String, Object> json = responseToJson(response);
+                assertEquals("Articles with id 67 not found", json.get("message"));
 
-//         }
+        }
 }
