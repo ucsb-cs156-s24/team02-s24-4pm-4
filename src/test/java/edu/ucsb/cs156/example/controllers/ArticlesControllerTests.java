@@ -200,56 +200,58 @@ public class ArticlesControllerTests extends ControllerTestCase {
 //         }
 
 
-//         // Tests for DELETE /api/ucsbdates?id=... 
+        // Tests for DELETE /api/ucsbdates?id=... 
 
-//         @WithMockUser(roles = { "ADMIN", "USER" })
-//         @Test
-//         public void admin_can_delete_a_date() throws Exception {
-//                 // arrange
+        @WithMockUser(roles = { "ADMIN", "USER" })
+        @Test
+        public void admin_can_delete_an_article() throws Exception {
+                // arrange
 
-//                 LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+                LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
 
-//                 UCSBDate ucsbDate1 = UCSBDate.builder()
-//                                 .name("firstDayOfClasses")
-//                                 .quarterYYYYQ("20222")
-//                                 .localDateTime(ldt1)
-//                                 .build();
+                Articles article1 = Articles.builder()
+                                .title("BigNewsAlert")
+                                .url("www.news.com")
+                                .explanation("superbignews")
+                                .email("newsman@gmail.com")
+                                .dateAdded(ldt1)
+                                .build();
 
-//                 when(ucsbDateRepository.findById(eq(15L))).thenReturn(Optional.of(ucsbDate1));
+                when(articlesRepository.findById(eq(15L))).thenReturn(Optional.of(article1));
 
-//                 // act
-//                 MvcResult response = mockMvc.perform(
-//                                 delete("/api/ucsbdates?id=15")
-//                                                 .with(csrf()))
-//                                 .andExpect(status().isOk()).andReturn();
+                // act
+                MvcResult response = mockMvc.perform(
+                                delete("/api/articles?id=15")
+                                                .with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
 
-//                 // assert
-//                 verify(ucsbDateRepository, times(1)).findById(15L);
-//                 verify(ucsbDateRepository, times(1)).delete(any());
+                // assert
+                verify(articlesRepository, times(1)).findById(15L);
+                verify(articlesRepository, times(1)).delete(any());
 
-//                 Map<String, Object> json = responseToJson(response);
-//                 assertEquals("UCSBDate with id 15 deleted", json.get("message"));
-//         }
+                Map<String, Object> json = responseToJson(response);
+                assertEquals("Article with id 15 deleted", json.get("message"));
+        }
         
-//         @WithMockUser(roles = { "ADMIN", "USER" })
-//         @Test
-//         public void admin_tries_to_delete_non_existant_ucsbdate_and_gets_right_error_message()
-//                         throws Exception {
-//                 // arrange
+        @WithMockUser(roles = { "ADMIN", "USER" })
+        @Test
+        public void admin_tries_to_delete_non_existant_article_and_gets_right_error_message()
+                        throws Exception {
+                // arrange
 
-//                 when(ucsbDateRepository.findById(eq(15L))).thenReturn(Optional.empty());
+                when(articlesRepository.findById(eq(15L))).thenReturn(Optional.empty());
 
-//                 // act
-//                 MvcResult response = mockMvc.perform(
-//                                 delete("/api/ucsbdates?id=15")
-//                                                 .with(csrf()))
-//                                 .andExpect(status().isNotFound()).andReturn();
+                // act
+                MvcResult response = mockMvc.perform(
+                                delete("/api/articles?id=15")
+                                                .with(csrf()))
+                                .andExpect(status().isNotFound()).andReturn();
 
-//                 // assert
-//                 verify(ucsbDateRepository, times(1)).findById(15L);
-//                 Map<String, Object> json = responseToJson(response);
-//                 assertEquals("UCSBDate with id 15 not found", json.get("message"));
-//         }
+                // assert
+                verify(articlesRepository, times(1)).findById(15L);
+                Map<String, Object> json = responseToJson(response);
+                assertEquals("Articles with id 15 not found", json.get("message"));
+        }
 
 //         // Tests for PUT /api/ucsbdates?id=... 
 
