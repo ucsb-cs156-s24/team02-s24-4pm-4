@@ -197,8 +197,8 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
     public void users_can_get_by_id_recommendation_request() throws Exception {
         // arrange
 
-        LocalDateTime expectedRequested = LocalDateTime.parse("2024-04-26T08:08:00");
-        LocalDateTime expectedNeeded = LocalDateTime.parse("2024-04-27T08:08:00");
+        LocalDateTime expectedRequested = LocalDateTime.parse("2022-01-03T00:00:00");
+        LocalDateTime expectedNeeded = LocalDateTime.parse("2022-01-03T00:00:00");
 
         RecommendationRequest expected = new RecommendationRequest();
         expected.setId(2L);
@@ -221,7 +221,64 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
         assertEquals(expectedJson, responseString);
     }
 
-    
+     //Tests for DELETE /api/recommendationrequests
+    @Test
+    public void logged_out_users_cannot_delete() throws Exception {
+        mockMvc.perform(delete("/api/recommendationrequests/delete?id=1"))
+                .andExpect(status().is(403));
+    }
+
+    @WithMockUser(roles = { "USER" })
+    @Test
+    public void logged_in_regular_users_cannot_delete() throws Exception {
+        mockMvc.perform(delete("/api/recommendationrequests/delete?id=123"))
+                .andExpect(status().is(403));
+    }
+
+
+    @WithMockUser(roles = { "ADMIN", "USER" })
+    @Test
+    public void admin_user_cant_find_recommendation_request_to_delete() throws Exception {
+        // arrange
+        when(recommendationRequestRepository.findById(3L)).thenReturn(Optional.empty());
+
+        // act
+        mockMvc.perform(delete("/api/recommendationrequests/delete?id=3").with(csrf())).andExpect(status().is(404)).andReturn();
+
+        // assert
+        verify(recommendationRequestRepository, times(1)).findById(3L);
+        verify(recommendationRequestRepository, times(0)).delete(any());
+    }
+
+    @WithMockUser(roles = { "ADMIN", "USER" })
+    @Test
+    public void an_admin_user_can_delete_a_recommendation_request() throws Exception {
+        // arrange
+        LocalDateTime expectedRequested = LocalDateTime.parse("2022-01-03T00:00:00");
+        LocalDateTime expectedNeeded = LocalDateTime.parse("2022-01-03T00:00:00");
+
+        RecommendationRequest expected = new RecommendationRequest();
+        expected.setId(3L);
+        expected.setRequesterEmail("requesterEmail");
+        expected.setProfessorEmail("professorEmail");
+        expected.setExplanation("explanation");
+        expected.setDateRequested(expectedNeeded);
+        expected.setDateNeeded(expectedRequested);
+        expected.setDone(true);
+
+        when(recommendationRequestRepository.findById(3L)).thenReturn(Optional.of(expected));
+
+        // act
+        MvcResult result = mockMvc.perform(delete("/api/recommendationrequests/delete?id=3").with(csrf())).andExpect(status().is(200)).andReturn();
+
+        // assert
+        //verify return message from delete
+        String responseString = result.getResponse().getContentAsString();
+        assertEquals("{\"message\":\"record 3 deleted\"}", responseString);
+        verify(recommendationRequestRepository, times(1)).findById(3L);
+        verify(recommendationRequestRepository, times(1)).delete(eq(expected));
+
+    }
 
 
 }
