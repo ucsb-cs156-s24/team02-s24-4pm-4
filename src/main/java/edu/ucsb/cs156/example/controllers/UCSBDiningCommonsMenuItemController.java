@@ -1,3 +1,7 @@
+package edu.ucsb.cs156.example.controllers;
+
+import edu.ucsb.cs156.example.entities.UCSBDiningCommonsMenuItem;
+import edu.ucsb.cs156.example.errors.EntityNotFoundException;
 import edu.ucsb.cs156.example.repositories.UCSBDiningCommonsMenuItemRepository;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,66 +47,66 @@ public class UCSBDiningCommonsMenuItemController extends ApiController {
     @Operation(summary= "Create a new item")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/post")
-    public UCSBDate postUCSBDate(
-            @Parameter(name="quarterYYYYQ") @RequestParam String quarterYYYYQ,
+    public UCSBDiningCommonsMenuItem postUCSBDiningCommonsMenuItem(
+            @Parameter(name="diningCommonsCode") @RequestParam String diningCommonsCode,
             @Parameter(name="name") @RequestParam String name,
-            @Parameter(name="date (in iso format, e.g. YYYY-mm-ddTHH:MM:SS; see https://en.wikipedia.org/wiki/ISO_8601)") @RequestParam("localDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime localDateTime)
+            @Parameter(name="station") @RequestParam String station)
             throws JsonProcessingException {
 
         // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         // See: https://www.baeldung.com/spring-date-parameters
 
-        log.info("localDateTime={}", localDateTime);
+        //log.info("localDateTime={}", localDateTime);
 
-        UCSBDate ucsbDate = new UCSBDate();
-        ucsbDate.setQuarterYYYYQ(quarterYYYYQ);
-        ucsbDate.setName(name);
-        ucsbDate.setLocalDateTime(localDateTime);
+        UCSBDiningCommonsMenuItem ucsbDiningCommonsMenuItem = new UCSBDiningCommonsMenuItem();
+        ucsbDiningCommonsMenuItem.setDiningCommonsCode(diningCommonsCode);
+        ucsbDiningCommonsMenuItem.setName(name);
+        ucsbDiningCommonsMenuItem.setStation(station);
 
-        UCSBDate savedUcsbDate = ucsbDateRepository.save(ucsbDate);
+        UCSBDiningCommonsMenuItem savedUcsbDiningCommonsMenuItem = ucsbDiningCommonsMenuItemRepository.save(ucsbDiningCommonsMenuItem);
 
-        return savedUcsbDate;
+        return savedUcsbDiningCommonsMenuItem;
     }
 
-    @Operation(summary= "Get a single date")
+    @Operation(summary= "Get a single item")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("")
-    public UCSBDate getById(
+    public UCSBDiningCommonsMenuItem getById(
             @Parameter(name="id") @RequestParam Long id) {
-        UCSBDate ucsbDate = ucsbDateRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(UCSBDate.class, id));
+        UCSBDiningCommonsMenuItem UCSBDiningCommonsMenuItem = ucsbDiningCommonsMenuItemRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(UCSBDiningCommonsMenuItem.class, id));
 
-        return ucsbDate;
+        return UCSBDiningCommonsMenuItem;
     }
 
-    @Operation(summary= "Delete a UCSBDate")
+    @Operation(summary= "Delete an item")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("")
-    public Object deleteUCSBDate(
+    public Object deleteUCSBDiningCommonsMenuItem(
             @Parameter(name="id") @RequestParam Long id) {
-        UCSBDate ucsbDate = ucsbDateRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(UCSBDate.class, id));
+        UCSBDiningCommonsMenuItem UCSBDiningCommonsMenuItem = ucsbDiningCommonsMenuItemRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(UCSBDiningCommonsMenuItem.class, id));
 
-        ucsbDateRepository.delete(ucsbDate);
-        return genericMessage("UCSBDate with id %s deleted".formatted(id));
+        ucsbDiningCommonsMenuItemRepository.delete(UCSBDiningCommonsMenuItem);
+        return genericMessage("UCSBDiningCommonsMenuItem with id %s deleted".formatted(id));
     }
 
-    @Operation(summary= "Update a single date")
+    @Operation(summary= "Update a single item")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("")
-    public UCSBDate updateUCSBDate(
+    public UCSBDiningCommonsMenuItem updateUCSBDiningCommonsMenuItem(
             @Parameter(name="id") @RequestParam Long id,
-            @RequestBody @Valid UCSBDate incoming) {
+            @RequestBody @Valid UCSBDiningCommonsMenuItem incoming) {
 
-        UCSBDate ucsbDate = ucsbDateRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(UCSBDate.class, id));
+        UCSBDiningCommonsMenuItem ucsbDiningCommonsMenuItem = ucsbDiningCommonsMenuItemRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(UCSBDiningCommonsMenuItem.class, id));
 
-        ucsbDate.setQuarterYYYYQ(incoming.getQuarterYYYYQ());
-        ucsbDate.setName(incoming.getName());
-        ucsbDate.setLocalDateTime(incoming.getLocalDateTime());
+        ucsbDiningCommonsMenuItem.setDiningCommonsCode(incoming.getDiningCommonsCode());
+        ucsbDiningCommonsMenuItem.setName(incoming.getName());
+        ucsbDiningCommonsMenuItem.setStation(incoming.getStation());
 
-        ucsbDateRepository.save(ucsbDate);
+        ucsbDiningCommonsMenuItemRepository.save(ucsbDiningCommonsMenuItem);
 
-        return ucsbDate;
+        return ucsbDiningCommonsMenuItem;
     }
 }
