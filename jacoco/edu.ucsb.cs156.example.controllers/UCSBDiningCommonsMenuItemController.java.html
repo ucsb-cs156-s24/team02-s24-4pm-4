@@ -80,5 +80,24 @@ import java.time.LocalDateTime;
     }
 
     
+
+    @Operation(summary= &quot;Update a single item&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @PutMapping(&quot;&quot;)
+    public UCSBDiningCommonsMenuItem updateUCSBDiningCommonsMenuItem(
+            @Parameter(name=&quot;id&quot;) @RequestParam Long id,
+            @RequestBody @Valid UCSBDiningCommonsMenuItem incoming) {
+
+<span class="fc" id="L91">        UCSBDiningCommonsMenuItem ucsbDiningCommonsMenuItem = ucsbDiningCommonsMenuItemRepository.findById(id)</span>
+<span class="fc" id="L92">                .orElseThrow(() -&gt; new EntityNotFoundException(UCSBDiningCommonsMenuItem.class, id));</span>
+
+<span class="fc" id="L94">        ucsbDiningCommonsMenuItem.setDiningCommonsCode(incoming.getDiningCommonsCode());</span>
+<span class="fc" id="L95">        ucsbDiningCommonsMenuItem.setName(incoming.getName());</span>
+<span class="fc" id="L96">        ucsbDiningCommonsMenuItem.setStation(incoming.getStation());</span>
+
+<span class="fc" id="L98">        ucsbDiningCommonsMenuItemRepository.save(ucsbDiningCommonsMenuItem);</span>
+
+<span class="fc" id="L100">        return ucsbDiningCommonsMenuItem;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
