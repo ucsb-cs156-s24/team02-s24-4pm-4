@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-s24/team02-s24-4pm-4
 owner: ucsb-cs156-s24
 repo_name: team02-s24-4pm-4
-pull_requests: [{"author":{"id":"U_kgDOBdLvhw","is_bot":false,"login":"andersonlee3","name":""},"headRefName":"Anderson-Delete","number":66,"title":"Implemented DEL endpoint ","url":"https://github.com/ucsb-cs156-s24/team02-s24-4pm-4/pull/66"},{"author":{"id":"U_kgDOBdLvhw","is_bot":false,"login":"andersonlee3","name":""},"headRefName":"Anderson-Put","number":65,"title":"implemented put endpoint and passed tests for menu items","url":"https://github.com/ucsb-cs156-s24/team02-s24-4pm-4/pull/65"}]
+pull_requests: [{"author":{"id":"U_kgDOBdLvhw","is_bot":false,"login":"andersonlee3","name":""},"headRefName":"Anderson-Delete","number":66,"title":"Implemented DEL endpoint ","url":"https://github.com/ucsb-cs156-s24/team02-s24-4pm-4/pull/66"}]
